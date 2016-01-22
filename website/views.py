@@ -45,3 +45,8 @@ def index(request):
         context = {'errors': errors, 'form': form}
 
     return render(request, 'website/index.html', context)
+
+
+def thanks(request):
+    context = {'email': request.session['email']}
+    return render(request, 'website/thanks.html', context)
