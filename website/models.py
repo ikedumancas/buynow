@@ -3,7 +3,7 @@ from django.db import models
 
 class Order(models.Model):
     email = models.EmailField()
-    transaction_id = models.CharField(max_length=120)
+    transaction_id = models.CharField("Transaction ID", max_length=120)
     cvcode = models.IntegerField("CV Code")
     expirem = models.IntegerField("Expire Month")
     expirey = models.IntegerField("Expire Year")
