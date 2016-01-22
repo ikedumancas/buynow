@@ -1,0 +1,20 @@
+html {
+  min-height: 100%;
+}
+
+body {
+  background-color: #222;
+  background-image: url(../images/background-stars.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  min-height: 100%;
+}
+
+.pitch {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
