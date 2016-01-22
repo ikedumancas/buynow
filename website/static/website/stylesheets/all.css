@@ -18,3 +18,10 @@ body {
   transform: translateY(-50%);
   width: 100%;
 }
+.modal {
+  color: #000;
+}
+.small-input {
+  width: 75px;
+  margin-right: 5px;
+}

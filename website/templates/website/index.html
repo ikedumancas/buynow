@@ -15,10 +15,66 @@
         <div class="col-md-offset-3 col-md-6">
           <h1>Start a Profitable Amazon Business in 90 Days</h1>
           <p>I created my own brand and sold $22,883 on Amazon my first 30 days. Get the step-by-step process I followed to select a product, source it, and then kick-start sales.</p>
-          <p><button class="btn btn-primary">Download the complete blueprint for $29.99</button></p>
+          <p><button class="btn btn-primary" data-toggle="modal" data-target="#paymentFormModal">Download the complete blueprint for $29.99</button></p>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- MODAL PAYMENT START -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="paymentFormModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">$29.99</h4>
+        </div>
+        <form action="." id="paymentForm", method="POST"> {% csrf_token %}
+          <div class="modal-body">
+              <div id="payment">
+                <div class="form-group">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your email address">
+                </div>
+                <div class="form-group">
+                  <label for="cardNumer">Card Number</label>
+                  <input type="text" class="form-control" id="cardNumer" name="cardnumber" placeholder="4242 4242 4242 4242">
+                </div>
+                <div class="form-group pull-left">
+                  <label for="cardExpiry">Expiry Date</label>
+                  <br/>
+                  <input type="number" class="form-control small-input pull-left" name="expirem" placeholder="MM">
+                  <input type="number" class="form-control small-input pull-left" name="expirey" placeholder="YY">
+                  <div class="clearfix"></div>
+                </div>
+                <div class="form-group pull-right">
+                  <label for="cardcv">CV Code</label>
+                  <br/>
+                  <input type="number" class="form-control small-input pull-left" name="cvcode" placeholder="123">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary" data-loading-text="Processing...." value="Pay" id="submitPayment" />
+          </div>
+        </form>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  <!-- MODAL PAYMENT END -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script>
+$(function() {
+  $("#submitPayment").on("click", function(){
+    var btn = $(this).button("loading");
+    setTimeout(function(){
+      btn.button('reset');
+    }, 5000)
+  });
+});
+</script>
 </body>
 </html>
