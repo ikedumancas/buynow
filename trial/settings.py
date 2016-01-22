@@ -120,3 +120,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# braintree
+BRAINTREE_MERCHANT_ID = "f8gzrrwx3k2kz5sj"
+BRAINTREE_PUBLIC_KEY = "v8pdsgtws27whfts"
+BRAINTREE_PRIVATE_KEY = "54954ff8226de1eb9a74e3e48b02c24f"
