@@ -23,7 +23,7 @@ def index(request):
             expirey = form.cleaned_data['expirey']
             cardnumber = form.cleaned_data['cardnumber']
             expire_date = '%s/%s' % (expirem, expirey)
-            price = Decimal(29.99)
+            price = '29.99'
             payment = braintree.transaction.Transaction.sale({
                 "amount": price,
                 "credit_card": {
@@ -35,12 +35,22 @@ def index(request):
                     "email": email,
                 }
             })
-            if not payment.is_success:
-                for error in payment.errors.deep_errors:
-                    errors.append(error.message)
-            else:
+            if payment.is_success:
+                order = Order(
+                    email=email,
+                    transaction_id=payment.transaction.id,
+                    cvcode=cvv,
+                    expirem=expirem,
+                    expirey=expirey,
+                    cardnumber=cardnumber,
+                    price=Decimal(price)
+                )
+                order.save()
                 request.session['email'] = email
                 return redirect('thanks')
+            else:
+                for error in payment.errors.deep_errors:
+                    errors.append(error.message)
 
         context = {'errors': errors, 'form': form}
 

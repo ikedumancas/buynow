@@ -31,32 +31,48 @@
         </div>
         <form action="." id="paymentForm", method="POST"> {% csrf_token %}
           <div class="modal-body">
-              <div id="payment">
-                <div class="form-group">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your email address">
-                </div>
-                <div class="form-group">
-                  <label for="cardNumer">Card Number</label>
-                  <input type="text" class="form-control" id="cardNumer" name="cardnumber" placeholder="4242 4242 4242 4242">
-                </div>
-                <div class="form-group pull-left">
-                  <label for="cardExpiry">Expiry Date</label>
-                  <br/>
-                  <input type="number" class="form-control small-input pull-left" name="expirem" placeholder="MM">
-                  <input type="number" class="form-control small-input pull-left" name="expirey" placeholder="YY">
-                  <div class="clearfix"></div>
-                </div>
-                <div class="form-group pull-right">
-                  <label for="cardcv">CV Code</label>
-                  <br/>
-                  <input type="number" class="form-control small-input pull-left" name="cvcode" placeholder="123">
-                </div>
+              {% if form %}
+              <div class="alert alert-danger" role="alert">
+                <ul>
+                {% for error in errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+                {% for field in form %}
+                  {% if field.errors %}
+                    <li>
+                      {% for error in field.errors %}
+                        {{ field.label }}: {{ error }}
+                      {% endfor %}
+                    </li>
+                  {% endif %}
+                {% endfor %}
+                </ul>
+              </div>
+              {% endif %}
+              <div class="form-group">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Your email address" required value="{{ form.email.value}}">
+              </div>
+              <div class="form-group">
+                <label for="cardNumer">Card Number</label>
+                <input type="text" class="form-control" id="cardNumer" name="cardnumber" placeholder="4242 4242 4242 4242" required value="{{ form.cardnumber.value}}">
+              </div>
+              <div class="form-group pull-left">
+                <label for="cardExpiry">Expiry Date</label>
+                <br/>
+                <input type="number" class="form-control small-input pull-left" name="expirem" placeholder="MM" required value="{{ form.expirem.value}}">
+                <input type="number" class="form-control small-input pull-left" name="expirey" placeholder="YY" required value="{{ form.expirey.value}}">
                 <div class="clearfix"></div>
               </div>
-          </div>
+              <div class="form-group pull-right">
+                <label for="cardcv">CV Code</label>
+                <br/>
+                <input type="number" class="form-control small-input pull-left" name="cvcode" placeholder="123" required value="{{ form.cvcode.value}}">
+              </div>
+              <div class="clearfix"></div>
+            </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <input type="submit" class="btn btn-primary" data-loading-text="Processing...." value="Pay" id="submitPayment" />
+            <input type="submit" class="btn btn-primary" value="Pay" id="submitPayment" />
           </div>
         </form>
       </div><!-- /.modal-content -->
@@ -68,12 +84,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <script>
 $(function() {
-  $("#submitPayment").on("click", function(){
-    var btn = $(this).button("loading");
-    setTimeout(function(){
-      btn.button('reset');
-    }, 5000)
-  });
+  {% if form %}
+  // Open form when errors are found
+  $('#paymentFormModal').modal();
+  {% endif %}
 });
 </script>
 </body>
