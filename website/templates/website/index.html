@@ -54,11 +54,19 @@
               </div>
               <div class="form-group">
                 <label for="cardNumer">Card Number</label>
-                <input id="cardNumer" data-braintree-name="number" placeholder="4111111111111111" class="form-control" required>
+                <input type="text" class="form-control" id="cardNumer" data-braintree-name="number" placeholder="4111111111111111" required>
               </div>
-              <div class="form-group">
+              <div class="form-group pull-left">
                 <label for="cardExpiry">Expiry Date</label>
-                <input id="cardExpiry" data-braintree-name="expiration_date" placeholder="10/20" class="form-control" required>
+                <br/>
+                <input type="number" data-braintree-name="expiration_month" class="form-control small-input pull-left" placeholder="MM" required>
+                <input type="number" data-braintree-name="expiration_year" class="form-control small-input pull-left" placeholder="YY" required>
+                <div class="clearfix"></div>
+              </div>
+              <div class="form-group pull-right">
+                <label for="cardcv">CV Code</label>
+                <br/>
+                <input type="number" data-braintree-name="cvv" class="form-control small-input pull-left" placeholder="123" required>
               </div>
               <div class="clearfix"></div>
             </div>
