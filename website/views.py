@@ -12,38 +12,26 @@ braintree.Configuration.configure(braintree.Environment.Sandbox,
 
 
 def index(request):
-    context = {}
+    bt_token = braintree.ClientToken.generate()
+    context = {'bt_token': bt_token}
     errors = []
     if request.method == 'POST':
+        nonce = request.POST["payment_method_nonce"]
         form = OrderForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            cvv = form.cleaned_data['cvcode']
-            expirem = form.cleaned_data['expirem']
-            expirey = form.cleaned_data['expirey']
-            cardnumber = form.cleaned_data['cardnumber']
-            expire_date = '%s/%s' % (expirem, expirey)
             price = '29.99'
-            payment = braintree.transaction.Transaction.sale({
+            payment = braintree.Transaction.sale({
                 "amount": price,
-                "credit_card": {
-                    "number": cardnumber,
-                    "expiration_date": expire_date,
-                    "cvv": cvv
-                },
-                "customer": {
-                    "email": email,
-                }
+                "payment_method_nonce": nonce
             })
             if payment.is_success:
                 order = Order(
                     email=email,
                     transaction_id=payment.transaction.id,
-                    cvcode=cvv,
-                    expirem=expirem,
-                    expirey=expirey,
-                    cardnumber=cardnumber,
-                    price=Decimal(price)
+                    price=Decimal(price),
+                    card_type=payment.transaction.credit_card['card_type'],
+                    last_4=payment.transaction.credit_card['last_4']
                 )
                 order.save()
                 request.session['email'] = email
@@ -52,7 +40,7 @@ def index(request):
                 for error in payment.errors.deep_errors:
                     errors.append(error.message)
 
-        context = {'errors': errors, 'form': form}
+        context = {'bt_token': bt_token, 'errors': errors, 'form': form}
 
     return render(request, 'website/index.html', context)
 
