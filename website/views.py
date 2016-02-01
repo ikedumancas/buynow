@@ -34,13 +34,22 @@ def index(request):
                 "payment_method_nonce": nonce
             })
             if payment.is_success:
-                order = Order(
-                    email=email,
-                    transaction_id=payment.transaction.id,
-                    price=Decimal(price),
-                    card_type=payment.transaction.credit_card['card_type'],
-                    last_4=payment.transaction.credit_card['last_4']
-                )
+                if payment.transaction.payment_instrument_type == "paypal_account":
+                    order = Order(
+                        email=email,
+                        transaction_id=payment.transaction.id,
+                        price=Decimal(price),
+                        card_type="PayPal",
+                        last_4=""
+                    )
+                else:
+                    order = Order(
+                        email=email,
+                        transaction_id=payment.transaction.id,
+                        price=Decimal(price),
+                        card_type=payment.transaction.credit_card['card_type'],
+                        last_4=payment.transaction.credit_card['last_4']
+                    )
                 order.save()
                 request.session['email'] = email
                 return redirect('thanks')

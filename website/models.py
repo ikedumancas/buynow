@@ -6,7 +6,7 @@ class Order(models.Model):
     transaction_id = models.CharField("Transaction ID", max_length=120)
     price = models.DecimalField("Price", max_digits=5, decimal_places=2)
     card_type = models.CharField("Card Type", max_length=120)
-    last_4 = models.CharField("Last 4 Digits", max_length=50)
+    last_4 = models.CharField("Last 4 Digits", max_length=4, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     class Meta:
