@@ -52,7 +52,14 @@
               <div class="form-group">
                 <input type="email" class="form-control" name="email" id="email" placeholder="Your email address" required value="{{ form.email.value}}">
               </div>
-              <div id="dropinForm"></div>
+              <div class="form-group">
+                <label for="cardNumer">Card Number</label>
+                <input id="cardNumer" data-braintree-name="number" placeholder="4111111111111111" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="cardExpiry">Expiry Date</label>
+                <input id="cardExpiry" data-braintree-name="expiration_date" placeholder="10/20" class="form-control" required>
+              </div>
               <div class="clearfix"></div>
             </div>
           <div class="modal-footer">
@@ -72,9 +79,7 @@
 $(function() {
   var clientToken = "{{ bt_token }}";
 
-  braintree.setup(clientToken, "dropin", {
-    container: "dropinForm"
-  });
+  braintree.setup(clientToken, "custom", {id: "paymentForm"});
   {% if form %}
   // Open form when errors are found
   $('#paymentFormModal').modal();
