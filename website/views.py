@@ -1,4 +1,5 @@
 import braintree
+from datetime import date
 from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import render, redirect
@@ -13,7 +14,14 @@ braintree.Configuration.configure(braintree.Environment.Sandbox,
 
 def index(request):
     bt_token = braintree.ClientToken.generate()
-    context = {'bt_token': bt_token}
+    curr_year = date.today().year
+    expire_months = range(1, 13)
+    expire_years = range(curr_year, curr_year + 11)
+    context = {
+        'bt_token': bt_token,
+        'expire_months': expire_months,
+        'expire_years': expire_years
+    }
     errors = []
     if request.method == 'POST':
         nonce = request.POST["payment_method_nonce"]
@@ -40,7 +48,13 @@ def index(request):
                 for error in payment.errors.deep_errors:
                     errors.append(error.message)
 
-        context = {'bt_token': bt_token, 'errors': errors, 'form': form}
+        context = {
+            'bt_token': bt_token,
+            'expire_months': expire_months,
+            'expire_years': expire_years,
+            'errors': errors,
+            'form': form
+        }
 
     return render(request, 'website/index.html', context)
 

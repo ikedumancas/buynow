@@ -59,8 +59,16 @@
               <div class="form-group pull-left">
                 <label for="cardExpiry">Expiry Date</label>
                 <br/>
-                <input type="number" data-braintree-name="expiration_month" class="form-control small-input pull-left" placeholder="MM" required>
-                <input type="number" data-braintree-name="expiration_year" class="form-control small-input pull-left" placeholder="YY" required>
+                <select data-braintree-name="expiration_month" class="form-control small-input pull-left">
+                      {% for month in expire_months %}
+                         <option value="{{ month }}">{{ month }}</option>
+                      {% endfor %}
+                </select>
+                <select data-braintree-name="expiration_year" class="form-control small-input pull-left">
+                      {% for year in expire_years %}
+                         <option value="{{ year }}">{{ year }}</option>
+                      {% endfor %}
+                </select>
                 <div class="clearfix"></div>
               </div>
               <div class="form-group pull-right">
