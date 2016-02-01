@@ -31,7 +31,8 @@
         </div>
         <form action="." id="paymentForm", method="POST"> {% csrf_token %}
           <div class="modal-body">
-              {% if form %}
+            <div id="dropinForm"></div>
+              <!-- {% if form %}
               <div class="alert alert-danger" role="alert">
                 <ul>
                 {% for error in errors %}
@@ -68,7 +69,7 @@
                 <br/>
                 <input type="number" class="form-control small-input pull-left" name="cvcode" placeholder="123" required value="{{ form.cvcode.value}}">
               </div>
-              <div class="clearfix"></div>
+              <div class="clearfix"></div> -->
             </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -82,8 +83,14 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 <script>
 $(function() {
+  var clientToken = "{{ bt_token }}";
+
+  braintree.setup(clientToken, "dropin", {
+    container: "dropinForm"
+  });
   {% if form %}
   // Open form when errors are found
   $('#paymentFormModal').modal();
