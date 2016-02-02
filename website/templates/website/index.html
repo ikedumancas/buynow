@@ -54,11 +54,11 @@
               </div>
               <div id="paypal-container"></div>
               <div class="form-group">
-                <label for="cardNumer">Card Number</label>
-                <input type="text" class="form-control" id="cardNumer" data-braintree-name="number" placeholder="4111111111111111">
+                <label class="control-label" for="cardNumber">Card Number</label>
+                <input type="text" class="form-control" id="cardNumber" data-braintree-name="number" placeholder="4111111111111111">
               </div>
               <div class="form-group pull-left">
-                <label for="cardExpiry">Expiry Date</label>
+                <label class="control-label" for="cardExpiry">Expiry Date</label>
                 <br/>
                 <select data-braintree-name="expiration_month" class="form-control small-input pull-left">
                       {% for month in expire_months %}
@@ -73,9 +73,9 @@
                 <div class="clearfix"></div>
               </div>
               <div class="form-group pull-right">
-                <label for="cardcv">CV Code</label>
+                <label class="control-label" for="cardcv">CV Code</label>
                 <br/>
-                <input type="number" data-braintree-name="cvv" class="form-control small-input pull-left" placeholder="123">
+                <input type="number" data-braintree-name="cvv" id="cardcv" class="form-control small-input pull-left" placeholder="123">
               </div>
               <div class="clearfix"></div>
             </div>
@@ -92,21 +92,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+<script src="{% static 'website/javascripts/main.js' %}"></script>
 <script>
-$(function() {
-  var clientToken = "{{ bt_token }}";
+var clientToken = "{{ bt_token }}";
 
-  braintree.setup(clientToken, "custom", {
-    id: "paymentForm",
-    paypal: {
-      container: "paypal-container",
-      singleUse: true,
-      amount: 29.99,
-      currency: "USD",
-    }
-  });
+$(function() {
   {% if form %}
-  // Open form when errors are found
   $('#paymentFormModal').modal();
   {% endif %}
 });
