@@ -18,6 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^$', 'website.views.index'),
+    url(r'^ajax_pay/$', 'website.views.ajax_pay', name='ajax_pay'),
     url(r'^thanks/$', 'website.views.thanks', name='thanks'),
     url(r'^admin/', admin.site.urls),
 ]
