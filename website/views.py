@@ -1,8 +1,10 @@
+import json
 import braintree
 from datetime import date
 from decimal import Decimal
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import Http404, render, redirect
 from .forms import OrderForm
 from .models import Order
 
@@ -66,6 +68,54 @@ def index(request):
         }
 
     return render(request, 'website/index.html', context)
+
+
+def ajax_pay(request):
+    if request.method == 'POST':
+        response_data = {}
+        response_data['errors'] = {}
+        nonce = request.POST["payment_method_nonce"]
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            price = '29.99'
+            payment = braintree.Transaction.sale({
+                "amount": price,
+                "payment_method_nonce": nonce
+            })
+            if payment.is_success:
+                if payment.transaction.payment_instrument_type == "paypal_account":
+                    order = Order(
+                        email=email,
+                        transaction_id=payment.transaction.id,
+                        price=Decimal(price),
+                        card_type="PayPal",
+                        last_4=""
+                    )
+                else:
+                    order = Order(
+                        email=email,
+                        transaction_id=payment.transaction.id,
+                        price=Decimal(price),
+                        card_type=payment.transaction.credit_card['card_type'],
+                        last_4=payment.transaction.credit_card['last_4']
+                    )
+                order.save()
+                request.session['email'] = email
+                return HttpResponse(
+                    json.dump({"status": "ok"})
+                )
+            else:
+                bt_errors = []
+                for error in payment.errors.deep_errors:
+                    bt_errors.append(error.message)
+                response_data['errors']['braintree'] = bt_errors
+        else:
+            response_data['errors']['form'] = form.errors.as_data();
+        json_data = json.dumps(response_data)
+        return HttpResponse(json_data, content_type='application/json')
+    raise Http404
+
 
 
 def thanks(request):
