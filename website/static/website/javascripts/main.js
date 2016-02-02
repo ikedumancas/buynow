@@ -40,6 +40,47 @@ function checkPayPalLoggedIn() {
   $('#credit-card-inputs').css('display', display);
 }
 
+function new_payment(){
+  console.log('creating post'); // sanity check
+  $.ajax({
+    url: 'ajax_pay/',
+    type: 'POST',
+    data: {
+      email: $('#email').val(),
+      payment_method_nonce: $('input[name=payment_method_nonce]').val(),
+      csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    },
+    success : function(json) {
+      console.log(json);
+      if(json.status=='error'){
+        if(!$('#errorsListContainer').length > 0){
+          $('#paymentFormModal .modal-body').prepend('<div class="alert alert-danger" role="alert" id="errorsListContainer"></div>');
+        }
+        $('#errorsListContainer').html('<ul></ul>');
+        // display form errors
+        if(json.errors.form){
+          for(var k in json.errors.form){
+            for(x in json.errors.form[k]){
+              $('#errorsListContainer ul').append("<li>" + k.toUpperCase() + ": " + json.errors.form[k][x] + "</ul>");
+            }
+          }
+        // display braintree errors
+        }else if(json.errors.braintree){
+          for(x in json.errors.braintree){
+            $('#errorsListContainer ul').append("<li>" + json.errors.braintree[x] + "</ul>");
+          }
+        }
+      }else{
+        window.location = "thanks/";
+      }
+    },
+    error: function(xhr,errmsg,err){
+      console.log(err);
+      console.log(errmsg);
+      console.log(xhr);
+    }
+  });
+}
 
 $(function() {
   var client = new braintree.api.Client({clientToken: clientToken});
@@ -93,14 +134,13 @@ $(function() {
           cvv: code.val()
         }, function (err, nonce) {
           console.log(err);
-          console.log(nonce);
           $('input[name=payment_method_nonce]').val(nonce);
-          $('#paymentForm').submit();
+          new_payment();
         });
       }
     }else{
       if(error_count==0){
-        $('#paymentForm').submit();
+        new_payment();
       }
     }
   });

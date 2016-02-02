@@ -32,7 +32,7 @@
         <form action="." id="paymentForm", method="POST"> {% csrf_token %}
           <div class="modal-body">
               {% if form %}
-              <div class="alert alert-danger" role="alert">
+              <div class="alert alert-danger" role="alert" id="errorsListContainer">
                 <ul>
                 {% for error in errors %}
                   <li>{{ error }}</li>

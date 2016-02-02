@@ -102,20 +102,23 @@ def ajax_pay(request):
                     )
                 order.save()
                 request.session['email'] = email
+                response_data['status'] = "ok"
                 return HttpResponse(
-                    json.dump({"status": "ok"})
+                    json.dumps(response_data),
+                    content_type='application/json'
                 )
             else:
                 bt_errors = []
                 for error in payment.errors.deep_errors:
                     bt_errors.append(error.message)
                 response_data['errors']['braintree'] = bt_errors
+                response_data['status'] = "error"
         else:
-            response_data['errors']['form'] = form.errors.as_data();
+            response_data['errors']['form'] = form.errors
+            response_data['status'] = "error"
         json_data = json.dumps(response_data)
         return HttpResponse(json_data, content_type='application/json')
     raise Http404
-
 
 
 def thanks(request):
